@@ -16,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/mw-5/image-processing-api/issues"
   },
-  "homepage": "https://github.com/mw-5/image-processing-api#readme"
+  "homepage": "https://github.com/mw-5/image-processing-api#readme",
+  "devDependencies": {
+    "@types/node": "^17.0.30",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.4"
+  }
 }
