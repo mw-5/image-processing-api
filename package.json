@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/mw-5/image-processing-api#readme",
   "devDependencies": {
+    "@types/eslint": "^8.4.1",
     "@types/node": "^17.0.30",
     "@types/prettier": "^2.6.0",
     "eslint": "^8.8.0",
