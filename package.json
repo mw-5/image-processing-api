@@ -6,7 +6,9 @@
   "scripts": {
     "build": "npx tsc",
     "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "jasmine": "jasmine",
+    "test": "npm run build && npm run jasmine"
   },
   "keywords": [],
   "author": "Martin Werner",
