@@ -10,7 +10,6 @@
     "jasmine": "jasmine",
     "test": "npm run build && npm run jasmine",
     "start": "nodemon src/index.ts"
-
   },
   "keywords": [],
   "author": "Martin Werner",
@@ -30,6 +29,8 @@
     "@types/node": "^17.0.30",
     "@types/prettier": "^2.6.0",
     "@types/supertest": "^2.0.12",
+    "@typescript-eslint/eslint-plugin": "^5.21.0",
+    "@typescript-eslint/parser": "^5.21.0",
     "eslint": "^8.8.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
