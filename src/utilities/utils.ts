@@ -6,10 +6,10 @@
  * @returns {string} File name of the resized image
  */
 export const buildCacheImageName = (
-  fileName: string,
-  width: number,
-  height: number
+	fileName: string,
+	width: number,
+	height: number
 ): string => {
-  // TODO: implement function
-  return '';
+	// TODO: implement function
+	return '';
 };
