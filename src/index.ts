@@ -6,6 +6,7 @@ const port = 3000;
 
 app.use('/api', routes);
 
+// Start server
 app.listen(port, () => {
 	console.log(`Server listens at http://localhost:${port}`);
 });
