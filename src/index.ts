@@ -4,6 +4,7 @@ import routes from './routes/index';
 const app = express();
 const port = 3000;
 
+// Add routes
 app.use('/api', routes);
 
 // Start server
