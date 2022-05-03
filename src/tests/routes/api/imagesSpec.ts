@@ -26,4 +26,16 @@ describe('Test for endpoint GET api/images', () => {
 		);
 		expect(response.statusCode).toEqual(404);
 	});
+
+	it('expects status code 400 for missing parameters', async () => {
+		const response = await request.get(route + `?filename=${fileName}`);
+		expect(response.statusCode).toEqual(400);
+	});
+
+	it('expects status code 400 for width or height not being a number', async () => {
+		const response = await request.get(
+			route + `?filename=${fileName}&width=a&height=200px`
+		);
+		expect(response.statusCode).toEqual(400);
+	});
 });
