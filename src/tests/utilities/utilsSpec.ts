@@ -1,4 +1,4 @@
-import { buildCacheImageName } from '../../utilities/utils';
+import { buildCacheImageName, isNumber } from '../../utilities/utils';
 
 describe('Function that builds names of resized images', () => {
 	it('should build expected name', () => {
@@ -17,5 +17,15 @@ describe('Function that builds names of resized images', () => {
 
 		// Assert
 		expect(expectedFileName).toEqual(newFileName);
+	});
+});
+
+describe('Function that checks if string is a number', () => {
+	it('expects input to be a number', () => {
+		expect(isNumber('42')).toBeTrue();
+	});
+
+	it('expects input not to be a number', () => {
+		expect(isNumber('a')).toBeFalse();
 	});
 });
