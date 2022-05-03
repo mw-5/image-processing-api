@@ -21,3 +21,12 @@ export const buildCacheImageName = (
 	// Build file name for resized image
 	return `${mainPt}-w${width}-h${height}.${ext}`;
 };
+
+/**
+ * @description - Check whether provided string is a number
+ * @param value - The string to be checked
+ * @returns - Whether the string is a number
+ */
+export const isNumber = (value: string): boolean => {
+	return !Number.isNaN(Number.parseInt(value));
+};
