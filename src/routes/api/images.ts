@@ -75,7 +75,7 @@ const validateInput = (req: express.Request): [boolean, number, string] => {
 };
 
 /**
- *
+ * @description Extract information from query string
  * @param {express.Request} req - The http request
  * @returns {ImageArgs} - The extended data extracted from query string
  */
