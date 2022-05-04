@@ -4,9 +4,9 @@ import { buildCacheImageName, isNumber } from '../../utilities/utils';
 
 const images = express.Router();
 const dirThumbs = '../image-processing-api/assets/thumb';
-const PARAM_FILENAME = 'filename';
-const PARAM_WIDTH = 'width';
-const PARAM_HEIGHT = 'height';
+export const PARAM_FILENAME = 'filename';
+export const PARAM_WIDTH = 'width';
+export const PARAM_HEIGHT = 'height';
 
 /**
  * @description Validates the input for the endpoint GET /api/images
