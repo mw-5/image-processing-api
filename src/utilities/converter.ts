@@ -3,10 +3,10 @@ import { promises as fsPromises } from 'fs';
 
 /**
  * @description Resize an image and cache it
- * @param pathFileSrcImage - The path and file name of the source file
- * @param pathFileDstImage - The path and file name used to save the new image
- * @param width - The desired width of the image
- * @param height - The desired height of the image
+ * @param {string} pathFileSrcImage - The path and file name of the source file
+ * @param {sting} pathFileDstImage - The path and file name used to save the new image
+ * @param {number} width - The desired width of the image
+ * @param {number} height - The desired height of the image
  */
 const convert = async (
 	pathFileSrcImage: string,
