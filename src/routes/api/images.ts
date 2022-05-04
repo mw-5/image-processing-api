@@ -1,9 +1,9 @@
 import express from 'express';
 import path from 'path';
+import dirs from '../../utilities/dirs';
 import { buildCacheImageName, isNumber } from '../../utilities/utils';
 
 const images = express.Router();
-const dirThumbs = '../image-processing-api/assets/thumb';
 export const PARAM_FILENAME = 'filename';
 export const PARAM_WIDTH = 'width';
 export const PARAM_HEIGHT = 'height';
@@ -76,7 +76,7 @@ images.get('/', (req, res) => {
 			<number>(<unknown>req.query.width),
 			<number>(<unknown>req.query.height)
 		);
-		res.sendFile(path.resolve(dirThumbs, thumbName));
+		res.sendFile(path.resolve(dirs.ThumbImages, thumbName));
 	} catch (err) {
 		console.log(err);
 		// Hide server internals from user
