@@ -1,12 +1,29 @@
 import express from 'express';
 import path from 'path';
+import convert from '../../utilities/converter';
 import dirs from '../../utilities/dirs';
-import { buildCacheImageName, isNumber } from '../../utilities/utils';
+import {
+	buildCacheImageName,
+	fileExists,
+	isNumber,
+} from '../../utilities/utils';
 
 const images = express.Router();
 export const PARAM_FILENAME = 'filename';
 export const PARAM_WIDTH = 'width';
 export const PARAM_HEIGHT = 'height';
+
+/**
+ * @description Information retrieved from query string
+ */
+interface ImageArgs {
+	fileNameSrc: string;
+	pathFileSrc: string;
+	width: number;
+	height: number;
+	fileNameThumb: string;
+	pathFileThumb: string;
+}
 
 /**
  * @description Validates the input for the endpoint GET /api/images
@@ -57,8 +74,34 @@ const validateInput = (req: express.Request): [boolean, number, string] => {
 	return [isValid, statusCode, msg];
 };
 
+/**
+ *
+ * @param {express.Request} req - The http request
+ * @returns {ImageArgs} - The extended data extracted from query string
+ */
+const extractQryArgs = (req: express.Request): ImageArgs => {
+	// src file
+	const fileNameSrc = <string>req.query.filename;
+	const pathFileSrc = path.join(dirs.FullImages, fileNameSrc);
+	// size
+	const width = <number>(<unknown>req.query.width);
+	const height = <number>(<unknown>req.query.height);
+	// thumb file
+	const fileNameThumb = buildCacheImageName(fileNameSrc, width, height);
+	const pathFileThumb = path.join(dirs.ThumbImages, fileNameThumb);
+
+	return {
+		fileNameSrc,
+		pathFileSrc,
+		width,
+		height,
+		fileNameThumb,
+		pathFileThumb,
+	};
+};
+
 // Endpoint for serving a resized image
-images.get('/', (req, res) => {
+images.get('/', async (req, res): Promise<void> => {
 	try {
 		// Check input
 		const [isValid, statusCode, errMsg] = validateInput(req);
@@ -70,14 +113,22 @@ images.get('/', (req, res) => {
 			return;
 		}
 
-		// Serve cached file
-		const thumbName = buildCacheImageName(
-			<string>req.query.filename,
-			<number>(<unknown>req.query.width),
-			<number>(<unknown>req.query.height)
-		);
-		res.sendFile(path.resolve(dirs.ThumbImages, thumbName));
-	} catch (err) {
+		// Extract input from query string
+		const args = extractQryArgs(req);
+
+		// Convert and cache image if not already cached
+		if (!fileExists(args.pathFileThumb)) {
+			await convert(
+				args.pathFileSrc,
+				args.pathFileThumb,
+				args.width,
+				args.height
+			);
+		}
+
+		// Send image
+		res.sendFile(args.pathFileThumb);
+	} catch (err: unknown) {
 		console.log(err);
 		// Hide server internals from user
 		res.statusCode = 500;
