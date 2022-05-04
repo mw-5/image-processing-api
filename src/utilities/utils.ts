@@ -1,3 +1,6 @@
+import { promises as fsPromises } from 'fs';
+import fs from 'fs';
+
 /**
  * @description Build name of cached image based on supplied arguments
  * @param {string} fileName - The name of the original file with its extension
@@ -29,4 +32,21 @@ export const buildCacheImageName = (
  */
 export const isNumber = (value: string): boolean => {
 	return !Number.isNaN(Number.parseInt(value));
+};
+
+/**
+ * @description Check if file exists. Use this function
+ * instead of fs.existsSync to avoid blocking the tread
+ * @param path - The path of the file to be checked
+ * @returns - Whether the file exists
+ */
+export const fileExists = async (path: string): Promise<boolean> => {
+	let isExisting: boolean;
+	try {
+		await fsPromises.access(path, fs.constants.F_OK);
+		isExisting = true;
+	} catch (err: unknown) {
+		isExisting = false;
+	}
+	return isExisting;
 };
