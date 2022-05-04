@@ -1,4 +1,10 @@
-import { buildCacheImageName, isNumber } from '../../utilities/utils';
+import {
+	buildCacheImageName,
+	isNumber,
+	fileExists,
+} from '../../utilities/utils';
+import dirs from '../../utilities/dirs';
+import path from 'path';
 
 describe('Function that builds names of resized images', () => {
 	it('should build expected name', () => {
@@ -27,5 +33,29 @@ describe('Function that checks if string is a number', () => {
 
 	it('expects input not to be a number', () => {
 		expect(isNumber('a')).toBeFalse();
+	});
+});
+
+describe('Function fileExists', () => {
+	it('expects file to exist', async () => {
+		// Arrange
+		const testFile = path.resolve(dirs.FullImages, 'icelandwaterfall.jpg');
+
+		// Act
+		const isExisting = await fileExists(testFile);
+
+		// Assert
+		expect(isExisting).toBeTrue();
+	});
+
+	it('expects file to be missing', async () => {
+		// Arrange
+		const testFile = path.resolve(dirs.FullImages, 'notexisting.jpg');
+
+		// Act
+		const isExisting = await fileExists(testFile);
+
+		// Assert
+		expect(isExisting).toBeFalse();
 	});
 });
