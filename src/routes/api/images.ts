@@ -84,8 +84,8 @@ const extractQryArgs = (req: express.Request): ImageArgs => {
 	const fileNameSrc = <string>req.query.filename;
 	const pathFileSrc = path.join(dirs.FullImages, fileNameSrc);
 	// size
-	const width = <number>(<unknown>req.query.width);
-	const height = <number>(<unknown>req.query.height);
+	const width = Number.parseInt(<string>req.query.width);
+	const height = Number.parseInt(<string>req.query.height);
 	// thumb file
 	const fileNameThumb = buildCacheImageName(fileNameSrc, width, height);
 	const pathFileThumb = path.join(dirs.ThumbImages, fileNameThumb);
@@ -117,13 +117,18 @@ images.get('/', async (req, res): Promise<void> => {
 		const args = extractQryArgs(req);
 
 		// Convert and cache image if not already cached
-		if (!fileExists(args.pathFileThumb)) {
-			await convert(
-				args.pathFileSrc,
-				args.pathFileThumb,
-				args.width,
-				args.height
-			);
+		if (!(await fileExists(args.pathFileThumb))) {
+			if (await fileExists(args.pathFileSrc)) {
+				await convert(
+					args.pathFileSrc,
+					args.pathFileThumb,
+					args.width,
+					args.height
+				);
+			} else {
+				res.statusCode = 404;
+				res.send('Source file not found.');
+			}
 		}
 
 		// Send image
