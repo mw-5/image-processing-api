@@ -1,5 +1,6 @@
 import sharp from 'sharp';
 import { promises as fsPromises } from 'fs';
+import { fileExists } from './utils';
 
 /**
  * @description Resize an image and cache it
@@ -14,10 +15,14 @@ const convert = async (
 	width: number,
 	height: number
 ): Promise<void> => {
-	const buffer = await sharp(pathFileSrcImage)
-		.resize(width, height)
-		.toBuffer();
-	await fsPromises.writeFile(pathFileDstImage, buffer);
+	if (await fileExists(pathFileSrcImage)) {
+		const buffer = await sharp(pathFileSrcImage)
+			.resize(width, height)
+			.toBuffer();
+		await fsPromises.writeFile(pathFileDstImage, buffer);
+	} else {
+		throw new Error('Source file not found');
+	}
 };
 
 export default convert;
