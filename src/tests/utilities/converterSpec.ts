@@ -19,6 +19,13 @@ describe('Test of function convert', () => {
 		expect(await fileExists(pathFileDstImage)).toBeTrue();
 	});
 
+	it('expects to throw error for non-existing input path', async () => {
+		const pathMissingFile = path.join(dirs.FullImages, 'missing.jpg');
+		await expectAsync(
+			convert(pathMissingFile, pathFileDstImage, width, height)
+		).toBeRejectedWithError('Source file not found');
+	});
+
 	afterEach(async () => await cleanUp(pathFileDstImage));
 });
 
