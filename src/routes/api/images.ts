@@ -119,12 +119,17 @@ images.get('/', async (req, res): Promise<void> => {
 		// Convert and cache image if not already cached
 		if (!(await fileExists(args.pathFileThumb))) {
 			if (await fileExists(args.pathFileSrc)) {
-				await convert(
-					args.pathFileSrc,
-					args.pathFileThumb,
-					args.width,
-					args.height
-				);
+				try {
+					await convert(
+						args.pathFileSrc,
+						args.pathFileThumb,
+						args.width,
+						args.height
+					);
+				} catch (error: unknown) {
+					res.statusCode = 404;
+					res.send("Image couldn't be processed");
+				}
 			} else {
 				res.statusCode = 404;
 				res.send('Source file not found.');
