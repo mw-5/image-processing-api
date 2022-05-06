@@ -15,10 +15,13 @@ const convert = async (
 	width: number,
 	height: number
 ): Promise<void> => {
+	// Check that provided source file exists
 	if (await fileExists(pathFileSrcImage)) {
+		// Resize image
 		const buffer = await sharp(pathFileSrcImage)
 			.resize(width, height)
 			.toBuffer();
+		// Cache image
 		await fsPromises.writeFile(pathFileDstImage, buffer);
 	} else {
 		throw new Error('Source file not found');
