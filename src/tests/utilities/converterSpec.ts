@@ -12,6 +12,7 @@ describe('Test of function convert', () => {
 	const dstImage = buildCacheImageName(fileName, width, height);
 	const pathFileDstImage = path.join(dirs.ThumbImages, dstImage);
 
+	// Delete image created by an earlier test
 	beforeEach(async () => await cleanUp(pathFileDstImage));
 
 	it('expects image to be written', async () => {
@@ -26,6 +27,7 @@ describe('Test of function convert', () => {
 		).toBeRejectedWithError('Source file not found');
 	});
 
+	// Delete image created by test
 	afterEach(async () => await cleanUp(pathFileDstImage));
 });
 
