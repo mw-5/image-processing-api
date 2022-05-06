@@ -28,7 +28,7 @@ interface ImageArgs {
 /**
  * @description Validates the input for the endpoint GET /api/images
  * @param {express.Request} req - The incoming request
- * @returns - Returns a tuple consisting of whether the input is valid,
+ * @returns {tuple} - Returns a tuple consisting of whether the input is valid,
  * the status code to be returned if invalid and a description of the errors
  */
 const validateInput = (req: express.Request): [boolean, number, string] => {
