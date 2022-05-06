@@ -80,13 +80,13 @@ const validateInput = (req: express.Request): [boolean, number, string] => {
  * @returns {ImageArgs} - The extended data extracted from query string
  */
 const extractQryArgs = (req: express.Request): ImageArgs => {
-	// src file
+	// Source file
 	const fileNameSrc = <string>req.query.filename;
 	const pathFileSrc = path.join(dirs.fullImages, fileNameSrc);
-	// size
+	// Size
 	const width = Number.parseInt(<string>req.query.width);
 	const height = Number.parseInt(<string>req.query.height);
-	// thumb file
+	// Thumb file
 	const fileNameThumb = buildCacheImageName(fileNameSrc, width, height);
 	const pathFileThumb = path.join(dirs.thumbImages, fileNameThumb);
 
