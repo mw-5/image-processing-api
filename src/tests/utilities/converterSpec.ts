@@ -6,11 +6,11 @@ import { promises as fsPromises } from 'fs';
 
 describe('Test of function convert', () => {
 	const fileName = 'icelandwaterfall.jpg';
-	const pathFileSrcImage = path.join(dirs.FullImages, fileName);
+	const pathFileSrcImage = path.join(dirs.fullImages, fileName);
 	const width = 200;
 	const height = 200;
 	const dstImage = buildCacheImageName(fileName, width, height);
-	const pathFileDstImage = path.join(dirs.ThumbImages, dstImage);
+	const pathFileDstImage = path.join(dirs.thumbImages, dstImage);
 
 	// Delete image created by an earlier test
 	beforeEach(async () => await cleanUp(pathFileDstImage));
@@ -21,7 +21,7 @@ describe('Test of function convert', () => {
 	});
 
 	it('expects to throw error for non-existing input path', async () => {
-		const pathMissingFile = path.join(dirs.FullImages, 'missing.jpg');
+		const pathMissingFile = path.join(dirs.fullImages, 'missing.jpg');
 		await expectAsync(
 			convert(pathMissingFile, pathFileDstImage, width, height)
 		).toBeRejectedWithError('Source file not found');

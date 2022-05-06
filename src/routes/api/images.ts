@@ -82,13 +82,13 @@ const validateInput = (req: express.Request): [boolean, number, string] => {
 const extractQryArgs = (req: express.Request): ImageArgs => {
 	// src file
 	const fileNameSrc = <string>req.query.filename;
-	const pathFileSrc = path.join(dirs.FullImages, fileNameSrc);
+	const pathFileSrc = path.join(dirs.fullImages, fileNameSrc);
 	// size
 	const width = Number.parseInt(<string>req.query.width);
 	const height = Number.parseInt(<string>req.query.height);
 	// thumb file
 	const fileNameThumb = buildCacheImageName(fileNameSrc, width, height);
-	const pathFileThumb = path.join(dirs.ThumbImages, fileNameThumb);
+	const pathFileThumb = path.join(dirs.thumbImages, fileNameThumb);
 
 	return {
 		fileNameSrc,

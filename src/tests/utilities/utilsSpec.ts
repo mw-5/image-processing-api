@@ -39,7 +39,7 @@ describe('Function that checks if string is a number', () => {
 describe('Function fileExists', () => {
 	it('expects file to exist', async () => {
 		// Arrange
-		const testFile = path.resolve(dirs.FullImages, 'icelandwaterfall.jpg');
+		const testFile = path.resolve(dirs.fullImages, 'icelandwaterfall.jpg');
 
 		// Act
 		const isExisting = await fileExists(testFile);
@@ -50,7 +50,7 @@ describe('Function fileExists', () => {
 
 	it('expects file to be missing', async () => {
 		// Arrange
-		const testFile = path.resolve(dirs.FullImages, 'notexisting.jpg');
+		const testFile = path.resolve(dirs.fullImages, 'notexisting.jpg');
 
 		// Act
 		const isExisting = await fileExists(testFile);
