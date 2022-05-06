@@ -27,6 +27,12 @@ describe('Test of function convert', () => {
 		).toBeRejectedWithError('Source file not found');
 	});
 
+	it('expects to throw error if image can not be processed', async () => {
+		await expectAsync(
+			convert(pathFileSrcImage, pathFileDstImage, -100, height)
+		).toBeRejectedWithError();
+	});
+
 	// Delete image created by test
 	afterEach(async () => await cleanUp(pathFileDstImage));
 });
