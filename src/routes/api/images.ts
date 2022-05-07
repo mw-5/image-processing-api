@@ -1,149 +1,44 @@
 import express from 'express';
-import path from 'path';
-import convert from '../../utilities/converter';
-import dirs from '../../utilities/dirs';
+import converter from '../../middleware/converter';
 import {
-	buildCacheImageName,
-	fileExists,
-	isNumber,
-} from '../../utilities/utils';
+	PARAM_FILENAME as CONVERTER_PARAM_FILENAME,
+	PARAM_WIDTH as CONVERTER_PARAM_WIDTH,
+	PARAM_HEIGHT as CONVERTER_PARAM_HEIGHT,
+} from '../../middleware/converter';
 
 const images = express.Router();
-export const PARAM_FILENAME = 'filename';
-export const PARAM_WIDTH = 'width';
-export const PARAM_HEIGHT = 'height';
+// Endpoint makes its query parameters visible to application
+// e.g. for endpoint testing. It takes their names from the
+// middleware plugged in because it won't use them here itself.
+// That way middleware can easily be mounted to other endpoints.
+export const PARAM_FILENAME = CONVERTER_PARAM_FILENAME;
+export const PARAM_WIDTH = CONVERTER_PARAM_WIDTH;
+export const PARAM_HEIGHT = CONVERTER_PARAM_HEIGHT;
 
-/**
- * @description Information retrieved from query string
- */
-interface ImageArgs {
-	fileNameSrc: string;
-	pathFileSrc: string;
-	width: number;
-	height: number;
-	fileNameThumb: string;
-	pathFileThumb: string;
-}
+const explaination =
+	'This endpoint serves a resized image.\n' +
+	'To use this endpoint please provide these parameters as a ' +
+	'query string to a GET method:\n' +
+	`${PARAM_FILENAME} - name of the image which should be resized` +
+	`${PARAM_WIDTH} - new width of the image.` +
+	`${PARAM_HEIGHT} - new height of the image`;
 
-/**
- * @description Validates the input for the endpoint GET /api/images
- * @param {express.Request} req - The incoming request
- * @returns {tuple} - Returns a tuple consisting of whether the input is valid,
- * the status code to be returned if invalid and a description of the errors
- */
-const validateInput = (req: express.Request): [boolean, number, string] => {
-	let isValid = true;
-	let statusCode = 0;
-	let msg = '';
-	const missingArgs: string[] = [];
-	const MISSING = ' is missing';
-	const NAN = ' is not a number';
-
-	// Check filename
-	if (req.query.filename === undefined) {
-		missingArgs.push(PARAM_FILENAME + MISSING);
-	}
-
-	// Check width
-	if (req.query.width === undefined) {
-		missingArgs.push(PARAM_WIDTH + MISSING);
-	} else if (!isNumber(<string>req.query.width)) {
-		missingArgs.push(PARAM_WIDTH + NAN);
-	}
-
-	// Check height
-	if (req.query.height === undefined) {
-		missingArgs.push(PARAM_HEIGHT + MISSING);
-	} else if (!isNumber(<string>req.query.height)) {
-		missingArgs.push(PARAM_HEIGHT + NAN);
-	}
-
-	// If arguments are missing set info for user
-	if (missingArgs.length > 0) {
-		// Build message for user
-		msg = 'Failed to serve image.\n' + 'These parameters caused errors:\n';
-		missingArgs.forEach((param) => (msg += `- ${param}\n`));
-
-		// Set status code to 400 bad request
-		statusCode = 400;
-
-		// Flag input as invalid
-		isValid = false;
-	}
-
-	return [isValid, statusCode, msg];
-};
-
-/**
- * @description Extract information from query string
- * @param {express.Request} req - The http request
- * @returns {ImageArgs} - The extended data extracted from query string
- */
-const extractQryArgs = (req: express.Request): ImageArgs => {
-	// Source file
-	const fileNameSrc = <string>req.query.filename;
-	const pathFileSrc = path.join(dirs.fullImages, fileNameSrc);
-	// Size
-	const width = Number.parseInt(<string>req.query.width);
-	const height = Number.parseInt(<string>req.query.height);
-	// Thumb file
-	const fileNameThumb = buildCacheImageName(fileNameSrc, width, height);
-	const pathFileThumb = path.join(dirs.thumbImages, fileNameThumb);
-
-	return {
-		fileNameSrc,
-		pathFileSrc,
-		width,
-		height,
-		fileNameThumb,
-		pathFileThumb,
-	};
-};
-
-// Endpoint for serving a resized image
-images.get('/', async (req, res): Promise<void> => {
-	try {
-		// Check input
-		const [isValid, statusCode, errMsg] = validateInput(req);
-
-		// Inform user if input is invalid
-		if (!isValid) {
-			res.statusCode = statusCode;
-			res.send(errMsg);
-			return;
+images.get(
+	'/',
+	converter,
+	(req: express.Request, res: express.Response): void => {
+		// Check for errors reported by middleware
+		if (res.locals.errMsg !== undefined) {
+			res.send(res.locals.errMsg);
+			// Send resized image as response
+		} else if (res.locals.pathFileThumb !== undefined) {
+			res.sendFile(res.locals.pathFileThumb);
+			// Endpoint is queried without relevant query string.
+			// Send user an explaination on how to use this endpoint.
+		} else {
+			res.send(explaination);
 		}
-
-		// Extract input from query string
-		const args = extractQryArgs(req);
-
-		// Convert and cache image if not already cached
-		if (!(await fileExists(args.pathFileThumb))) {
-			if (await fileExists(args.pathFileSrc)) {
-				try {
-					await convert(
-						args.pathFileSrc,
-						args.pathFileThumb,
-						args.width,
-						args.height
-					);
-				} catch (error: unknown) {
-					res.statusCode = 404;
-					res.send("Image couldn't be processed");
-				}
-			} else {
-				res.statusCode = 404;
-				res.send('Source file not found.');
-			}
-		}
-
-		// Send image
-		res.sendFile(args.pathFileThumb);
-	} catch (err: unknown) {
-		console.log(err);
-		// Hide server internals from user
-		res.statusCode = 500;
-		res.send('Sorry, something went wrong.');
 	}
-});
+);
 
 export default images;
