@@ -18,10 +18,12 @@ export const PARAM_HEIGHT = CONVERTER_PARAM_HEIGHT;
 const explaination =
 	'This endpoint serves a resized image.\n' +
 	'To use this endpoint please provide these parameters as a ' +
-	'query string to a GET method:\n' +
-	`${PARAM_FILENAME} - name of the image which should be resized` +
-	`${PARAM_WIDTH} - new width of the image.` +
-	`${PARAM_HEIGHT} - new height of the image`;
+	'query string to a GET method:\n\n' +
+	`${PARAM_FILENAME} - Name of the image which should be resized\n` +
+	`${PARAM_WIDTH} - New width of the image\n` +
+	`${PARAM_HEIGHT} - New height of the image\n\n` +
+	`e.g.:\n?${PARAM_FILENAME}=myimage.jpg&${PARAM_WIDTH}=100` +
+	`&${PARAM_HEIGHT}=200`;
 
 images.get(
 	'/',
