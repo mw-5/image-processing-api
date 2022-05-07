@@ -23,6 +23,7 @@ const convert = async (
 			.toBuffer();
 		// Cache image
 		await fsPromises.writeFile(pathFileDstImage, buffer);
+		console.log('Image processed');
 	} else {
 		throw new Error('Source file not found');
 	}
