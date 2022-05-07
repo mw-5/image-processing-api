@@ -15,6 +15,7 @@ export const PARAM_FILENAME = CONVERTER_PARAM_FILENAME;
 export const PARAM_WIDTH = CONVERTER_PARAM_WIDTH;
 export const PARAM_HEIGHT = CONVERTER_PARAM_HEIGHT;
 
+// Manual for user if endpoint is accessed without query
 const explaination =
 	'This endpoint serves a resized image.\n' +
 	'To use this endpoint please provide these parameters as a ' +
@@ -25,6 +26,7 @@ const explaination =
 	`e.g.:\n?${PARAM_FILENAME}=myimage.jpg&${PARAM_WIDTH}=100` +
 	`&${PARAM_HEIGHT}=200`;
 
+// Endpoint GET /api/images
 images.get(
 	'/',
 	converter,
