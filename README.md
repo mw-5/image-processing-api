@@ -1,3 +1,4 @@
+# image-processing-api
 Image processing API
 
 This project sets up an endpoint which returns resized images.
